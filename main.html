@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Our Journey 💖</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playwrite+IT+Moderna:wght@300&family=Indie+Flower&family=Caveat:wght@700&family=Dancing+Script:wght@600&family=Cherry+Bomb+One&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --accent: #ff4d6d;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+  font-family: 'Poppins', sans-serif;
+}
+
+#fireworks {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.container, .storyboard {
+  position: relative;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(10px);
+  padding: 25px;
+  border-radius: 25px;
+  text-align: center;
+  width: 320px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+  z-index: 10;
+  animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+h2 { font-size: 20px; color: #b30059; margin-bottom: 20px; }
+
+.story-img {
+  width: 190PX;
+  height: 230px;
+  object-fit: cover;
+  border-radius: 15px;
+  border: 3px solid white;
+  margin-bottom: 12px;
+}
+
+.story-text {
+  margin-bottom: 15px;
+  font-size: 16px;
+  color: #333;
+  min-height: 110px;
+  max-height: 180px;
+  overflow-y: auto;
+  line-height: 1.4;
+  white-space: pre-line;
+}
+
+.nav-btns { display: flex; gap: 10px; }
+
+/* Buttons are now exactly the same size */
+.nav-btns button, #yesBtn, #noBtn {
+  flex: 1;
+  padding: 12px 0;
+  border: none;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+  min-width: 100px;
+}
+
+#yesBtn, .nav-btns button {
+  background: var(--accent);
+  color: white;
+}
+
+#noBtn {
+  background: #444;
+  color: #fff;
+  position: relative;
+  z-index: 999;
+}
+
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<canvas id="fireworks"></canvas>
+<audio id="audioPlayer"></audio>
+
+<div class="container" id="page1">
+  <h2>So u are here again?<br>Ready for the little surprise? 💖</h2>
+  <div style="display:flex; justify-content:center; gap:15px; width: 100%;">
+    <button id="yesBtn" onclick="openStory(event)">Yes</button>
+    <button id="noBtn" onmouseover="moveNo()">No</button>
+  </div>
+</div>
+
+<div class="storyboard hidden" id="page2">
+  <img id="storyImg" class="story-img" src="">
+  <div class="story-text" id="storyText"></div>
+  <div class="nav-btns">
+    <button id="prevBtn" onclick="prevStory()">Previous</button>
+    <button id="nextBtn" onclick="nextStory(event)">Next</button>
+  </div>
+</div>
+
+<script>
+const stories = [
+  { img: "Assets\\image_1.jpeg", song: "Songs\\SONG_1.mp3", font: "'Playwrite IT Moderna', cursive", text: "I don’t know from where to start, but it’s been one year that you are with me. 🙃🫶🏻\nAnd This was our first photo together...\nThat was my birthday, and I was super happy....you can see it in the picture, hehe 🥺\nAnd as I always say, I want you to be with me always.\nI don’t have a lot of demands… just stay with me. 🪄🩷" },
+  { img: "Assets\\image_2.jpeg", song: "Songs\\SONG_2.mp3", font: "'Indie Flower', cursive", text: "Mone ache oi incident ta?\nPolar bear der help korte giye nijer thutni phatiye phelechilo 🤕🐻\nAmi toh puro bhoye peye gechilam—oi rokto bhora rumal haath e niye naamte dekhe! 😭🤣\nKi ki na koreche literally… uff 🙆‍♀️😂\nAr ei photo ta o amar kache khub special 🤍🧿" },
+  { img: "Assets\\iamge_3.jpeg", song: "Songs\\SONG_3.mp3", font: "'Caveat', cursive", text: "And the 3rd one is your favourite i guess 🤭🫢, ye Saab face banane mei bohot achcha lagta hei na tumko? 😜😌🫣\nThen banate raho! 😂😤\nPhotos bhi khichte rahenge! 📸📸🤣\nMaza ayega mere letruuuuuu 💋🩷🤣🧿" },
+  { img: "Assets\\image_4.jpeg", song: "Songs\\SONG_4.mp3", font: "'Dancing Script', cursive", text: "So here comes the picture of our 1st trip to mandarmani 🌊🏖️, ektu bhalo kore pose o daoni 😤\nSudhu ekta din e oneeek memories niye firechi 🥹🤍✨, I miss the group! 🫂💭\nKaash ei sem er por o erom ekta trip hoto 😭🙏" },
+  { img: "Assets\\image_5.jpeg", song: "Songs\\SONG_5.mp3", font: "'Cherry Bomb One', cursive", text: "And the last one is my favourite 💕\nSara অষ্টমী te ei ektai photo, which was clicked by my Steve 📸🤍\nEto kandiyechile seidin!!!!! 😤😭\nWhatever, this one is my favourite 🤍🧿\nAnd the man who is standing beside me is also mine 😌💖\nStay by my side like this… always 🤞🤍\nHappy V-Day, love 💕" }
+];
+
+let index = 0;
+const audio = document.getElementById("audioPlayer");
+
+function openStory(e) {
+  celebrate(e.clientX, e.clientY);
+  document.getElementById("page1").classList.add("hidden");
+  document.getElementById("page2").classList.remove("hidden");
+  loadStory();
+}
+
+function loadStory() {
+  const storyImg = document.getElementById("storyImg");
+  const storyText = document.getElementById("storyText");
+  storyImg.src = stories[index].img;
+  storyText.innerText = stories[index].text;
+  storyText.style.fontFamily = stories[index].font;
+  audio.src = stories[index].song;
+  audio.play().catch(() => {});
+  document.getElementById("prevBtn").style.visibility = index === 0 ? "hidden" : "visible";
+  document.getElementById("nextBtn").innerText = index === stories.length - 1 ? "Replay ❤️" : "Next";
+}
+
+function nextStory(e) {
+  celebrate(e.clientX, e.clientY);
+  index = (index < stories.length - 1) ? index + 1 : 0;
+  loadStory();
+}
+
+function prevStory() { if (index > 0) { index--; loadStory(); } }
+
+function moveNo() {
+  const noBtn = document.getElementById("noBtn");
+  noBtn.style.position = "fixed";
+  noBtn.style.left = Math.random() * (window.innerWidth - 120) + "px";
+  noBtn.style.top = Math.random() * (window.innerHeight - 60) + "px";
+}
+
+// MASSIVE FIREWORKS LOGIC
+const canvas = document.getElementById("fireworks");
+const ctx = canvas.getContext("2d");
+let particles = [];
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+class HeartParticle {
+  constructor(x, y, color, speedMult) {
+    this.x = x; this.y = y;
+    this.color = color;
+    this.size = Math.random() * 5 + 3;
+    this.speedX = (Math.random() - 0.5) * 15 * speedMult;
+    this.speedY = (Math.random() - 0.5) * 15 * speedMult;
+    this.gravity = 0.1;
+    this.alpha = 1;
+  }
+  draw() {
+    ctx.save(); ctx.globalAlpha = this.alpha; ctx.fillStyle = this.color;
+    ctx.beginPath(); const s = this.size; ctx.translate(this.x, this.y);
+    ctx.moveTo(0, 0); ctx.bezierCurveTo(-s, -s, -s * 2, s, 0, s * 2);
+    ctx.bezierCurveTo(s * 2, s, s, -s, 0, 0); ctx.fill(); ctx.restore();
+  }
+  update() {
+    this.x += this.speedX; this.y += this.speedY; this.speedY += this.gravity;
+    this.alpha -= 0.01;
+  }
+}
+
+function createBurst(x, y) {
+  const color = `hsl(${Math.random() * 360}, 100%, 70%)`;
+  for (let i = 0; i < 40; i++) particles.push(new HeartParticle(x, y, color, 1));
+}
+
+function celebrate(x, y) {
+  createBurst(x, y); // Mouse burst
+  createBurst(50, window.innerHeight / 2); // Left side cannon
+  createBurst(window.innerWidth - 50, window.innerHeight / 2); // Right side cannon
+  createBurst(window.innerWidth / 2, 50); // Top burst
+}
+
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach((p, i) => {
+    p.update(); p.draw();
+    if (p.alpha <= 0) particles.splice(i, 1);
+  });
+  requestAnimationFrame(animate);
+}
+animate();
+
+window.onresize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
+</script>
+</body>
+</html>
